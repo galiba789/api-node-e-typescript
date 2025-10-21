@@ -16,6 +16,7 @@ export default defineConfig([
   {
     rules: {
       semi: ["warn", "always"],
+      " @typescript-eslint/no-empty-object-type": "off",
     }
   }
 ]);
