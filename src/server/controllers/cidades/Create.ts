@@ -1,18 +1,40 @@
-import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import * as yup from "yup";
+import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import * as yup from 'yup';
 
 interface ICidade {
-    nome:string
+    nome: string;
+    estado: string;
 }
 
-export const Create = (req: Request<{},{},ICidade>, res: Response) => {
-    if (req.body.nome === undefined){
-        return res.status(StatusCodes.BAD_REQUEST).send("informe o nome")
-    } else if(req.body.nome.length < 3 ){
-        return res.status(StatusCodes.BAD_REQUEST).send("O atributo nome precisa ter mais de 3 caracteres")
+const bodyValidation: yup.Schema<ICidade> = yup.object().shape({
+    nome: yup.string().required().min(3),
+    estado: yup.string().required().min(3),
+});
+
+export const Create = async (req: Request<{}, {}, ICidade>, res: Response) => {
+    let validatedData: ICidade | undefined = undefined;
+
+    try {
+        validatedData = await bodyValidation.validate(req.body, { abortEarly: false });
+    } catch (error) {
+        const yupError = error as yup.ValidationError;
+        const ValidationErrors: Record<string, string> = {};
+
+        yupError.inner.forEach(error => {
+            if (error.path === undefined) return;
+            ValidationErrors[error.path] = error.message;
+        });
+
+
+        return res.status(StatusCodes.BAD_REQUEST).json(
+            {
+                errors: ValidationErrors
+            }
+        );
     }
-    console.log(req.body.nome);
+
+    console.log(validatedData);
 
     return res.send("Create!");
 };
