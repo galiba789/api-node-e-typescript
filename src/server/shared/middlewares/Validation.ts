@@ -1,14 +1,14 @@
 import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Schema, ValidationError } from "yup";
+import { AnyObject, Maybe, ObjectSchema, ValidationError } from "yup";
 
 type TProperty = 'body' | 'header' | 'params' | 'query';
 
-type TGetSchema = <T>(schema: Schema<T>) => Schema<T>;
+type TGetSchema = <T extends Maybe<AnyObject>>(schema: ObjectSchema<T>) => ObjectSchema<T>;
 
 type TGetAllSchemas = (getSchema: TGetSchema) => Partial<TAllSchemas>;
 
-type TAllSchemas = Record<TProperty, Schema<any>>;
+type TAllSchemas = Record<TProperty, ObjectSchema<any>>;
 
 type TValidation = (getAllSchemas: TGetAllSchemas) => RequestHandler
 
@@ -47,6 +47,4 @@ export const validation: TValidation = (getAllSchemas) => async (req, res, next)
         return res.status(StatusCodes.BAD_REQUEST).json({ errorsResult });
     }
     
-    // CreateBody extende do RequestHandler, pois ele já tem o request e response.
-
 };
