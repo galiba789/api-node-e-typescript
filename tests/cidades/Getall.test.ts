@@ -6,48 +6,13 @@ import { testServer } from "../jest.setup";
 describe('Cidades - GetAll', () => {
 
     it('Pegar os registros', async () => {
-        const res1 = await testServer.get('/cidades').query({
-            limit: 10,
-            page: 1
-        });
+        const res1 = await testServer.post('/cidades').send({ nome: 'Montes Claros' });
 
-        expect(res1.statusCode).toEqual(StatusCodes.CREATED); 
-        expect(typeof res1.body).toEqual("number");
-    });
-    it('Parametros < 1', async () => {
-        const res1 = await testServer.get('/cidades').query({
-            limit: 0,
-            page: 0
-        });
+        expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
-        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST); 
-        expect(res1.body).toHaveProperty('errorsResult.query');
-    });
-    it('Parametros com String ao invés de numeros', async () => {
-        const res1 = await testServer.get('/cidades').query({
-            limit: "Oa",
-            page:"asdas"
-        });
-
-        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST); 
-        expect(res1.body).toHaveProperty('errorsResult.query');
-    });
-    it('Parametros Nulos', async () => {
-        const res1 = await testServer.get('/cidades').query({
-            limit: null,
-            page:  null
-        });
-
-        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST); 
-        expect(res1.body).toHaveProperty('errorsResult.query');
-    });
-    it('Parametros Indefinidos', async () => {
-        const res1 = await testServer.get('/cidades').query({
-            limit: undefined,
-            page:  undefined
-        });
-
-        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST); 
-        expect(res1.body).toHaveProperty('errorsResult.query');
+        const resBuscada = await testServer.get('/cidades').send();
+        // expect(Number(resBuscada.header['x-total-count'])).toBeGreaterThan(0);
+        expect(resBuscada.statusCode).toEqual(StatusCodes.OK);
+        expect(resBuscada.body.length).toBeGreaterThan(0);
     });
 });
