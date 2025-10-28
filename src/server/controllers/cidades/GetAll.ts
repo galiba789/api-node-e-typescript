@@ -15,8 +15,8 @@ interface IQueryProps {
 // exporta a funação que vai fazera validação pega o schema
 export const getAllValidation = validation( (getSchema) => ({
     query: getSchema<IQueryProps>(yup.object().shape({
-        page: yup.number().optional().moreThan(0),
-        limit: yup.number().optional().moreThan(0),
+        page: yup.number().required().moreThan(0),
+        limit: yup.number().required().moreThan(0),
         filter: yup.string().optional(),
     })),
 }));
@@ -25,5 +25,5 @@ export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res:Response
     console.log(req.query);
 
     
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado");
+    return res.status(StatusCodes.CREATED).json(1);
 };
