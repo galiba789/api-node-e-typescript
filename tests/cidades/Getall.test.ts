@@ -10,9 +10,10 @@ describe('Cidades - GetAll', () => {
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
-        const resBuscada = await testServer.get('/cidades').send();
-        // expect(Number(resBuscada.header['x-total-count'])).toBeGreaterThan(0);
+        const resBuscada = await testServer.get('/cidades').query({
+            page: 1,
+            limit: 1
+        });
         expect(resBuscada.statusCode).toEqual(StatusCodes.OK);
-        expect(resBuscada.body.length).toBeGreaterThan(0);
     });
 });

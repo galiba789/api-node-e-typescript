@@ -10,9 +10,10 @@ describe('Cidades - GetById', () => {
       });
 
       expect(res1.statusCode).toEqual(StatusCodes.CREATED);
-
-      const resSearch = await testServer.get(`/cidade/${res1.body}`).send();
       
+      const resSearch = await testServer.get(`/cidades/${res1.body}`);
+      
+      expect(Number(resSearch.header['content-length'])).toBeGreaterThan(0);
       expect(resSearch.statusCode).toEqual(StatusCodes.OK);
     });
 
