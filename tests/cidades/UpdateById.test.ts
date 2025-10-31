@@ -17,4 +17,11 @@ describe('Cidades - UpdateById', () => {
         });
         expect(resSearch.statusCode).toEqual(StatusCodes.NO_CONTENT);
     });
+  
+    it('Atualizando registro não existente', async () => {
+        const resSearch = await testServer.put(`/cidades/10000`).send({
+            nome: "Lavras"
+        });
+        expect(resSearch.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+    });
 });
